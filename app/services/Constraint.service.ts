@@ -207,7 +207,7 @@ async function checkRoomConflict(
 async function checkTeacherConflict(
   input: ScheduleInput,
   teacherId: string,
-  teacher: { unavailableSlots: unknown; name: string },
+  teacher: { unavailableSlots: unknown },
 ): Promise<ConstraintViolation[]> {
   const violations: ConstraintViolation[] = [];
 
@@ -231,7 +231,7 @@ async function checkTeacherConflict(
       violations.push({
         step: 4,
         stepName: "checkTeacherConflict",
-        message: `Teacher ${teacher.name} is unavailable on day ${input.dayOfWeek} periods ${slot.periodStart}-${slot.periodEnd}`,
+        message: `Teacher ${teacherId} is unavailable on day ${input.dayOfWeek} periods ${slot.periodStart}-${slot.periodEnd}`,
         severity: "error",
       });
     }

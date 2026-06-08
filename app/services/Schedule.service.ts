@@ -110,7 +110,7 @@ export async function updateSchedule(id: string, data: UpdateScheduleDto) {
     mode: data.mode || existing.mode,
   };
 
-  const result = await checkAllConstraints(input, id);
+  const result = await checkAllConstraints(input);
   if (!result.valid) {
     const errorMsg = result.violations
       .filter((v) => v.severity === "error")
