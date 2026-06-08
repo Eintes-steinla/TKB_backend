@@ -1,0 +1,7 @@
+# Application keys sample
+# Copy to app/config/app.keys.ts
+
+JWT_SECRET=replace_this_with_a_secure_random_string_of_at_least_32_characters
+JWT_REFRESH_SECRET=replace_this_with_another_secure_random_string_of_at_least_32_characters
+
+# Generate with: node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"

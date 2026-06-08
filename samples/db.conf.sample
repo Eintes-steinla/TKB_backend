@@ -1,0 +1,11 @@
+# Database configuration sample
+# Copy to app/config/db.conf.ts and adjust values
+
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=tkb_db
+DB_USER=postgres
+DB_PASSWORD=password
+DB_POOL_MIN=2
+DB_POOL_MAX=10
+DB_SSL=false

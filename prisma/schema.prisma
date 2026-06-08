@@ -1,0 +1,225 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Location {
+  id        String  @id @default(uuid())
+  name      String
+  code      String  @unique
+  address   String?
+  nameEn    String?
+  addressEn String?
+  lat       Float?
+  lng       Float?
+  rooms     Room[]
+
+  @@map("locations")
+}
+
+model Room {
+  id         String     @id @default(uuid())
+  locationId String
+  code       String     @unique
+  type       RoomType
+  capacity   Int
+  isActive   Boolean    @default(true)
+  location   Location   @relation(fields: [locationId], references: [id])
+  schedules  Schedule[]
+
+  @@map("rooms")
+}
+
+model Teacher {
+  id               String       @id @default(uuid())
+  code             String       @unique
+  dept             String?
+  unavailableSlots Json         @default("[]")
+  userId           String       @unique
+  assignments      Assignment[]
+  user             User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("teachers")
+}
+
+model Subject {
+  id                  String         @id @default(uuid())
+  code                String         @unique
+  name                String
+  nameEn              String?
+  credits             Int            @default(3)
+  roomType            RoomType
+  isPractice          Boolean        @default(false)
+  requiresConsecutive Boolean        @default(false)
+  curricula           Curriculum[]
+  teachingUnits       TeachingUnit[]
+
+  @@map("subjects")
+}
+
+model Major {
+  id        String       @id @default(uuid())
+  code      String       @unique
+  name      String
+  classes   ClassGroup[]
+  curricula Curriculum[]
+
+  @@map("majors")
+}
+
+model Cohort {
+  id      String       @id @default(uuid())
+  code    String       @unique
+  year    Int
+  classes ClassGroup[]
+
+  @@map("cohorts")
+}
+
+model Student {
+  id           String     @id @default(uuid())
+  userId       String     @unique
+  classGroupId String
+  studentCode  String     @unique
+  classGroup   ClassGroup @relation(fields: [classGroupId], references: [id])
+  user         User       @relation(fields: [userId], references: [id])
+
+  @@map("students")
+}
+
+model ClassGroup {
+  id           String       @id @default(uuid())
+  majorId      String
+  cohortId     String
+  code         String       @unique
+  studentCount Int          @default(0)
+  assignments  Assignment[]
+  cohort       Cohort       @relation(fields: [cohortId], references: [id])
+  major        Major        @relation(fields: [majorId], references: [id])
+  students     Student[]
+
+  @@map("class_groups")
+}
+
+model Curriculum {
+  id             String  @id @default(uuid())
+  majorId        String
+  subjectId      String
+  semesterNo     Int
+  weekStart      Int
+  weekEnd        Int
+  periodsPerWeek Int
+  major          Major   @relation(fields: [majorId], references: [id])
+  subject        Subject @relation(fields: [subjectId], references: [id])
+
+  @@map("curricula")
+}
+
+model Assignment {
+  id            String         @id @default(uuid())
+  teacherId     String?
+  classGroupId  String
+  classGroup    ClassGroup     @relation(fields: [classGroupId], references: [id])
+  teacher       Teacher?       @relation(fields: [teacherId], references: [id])
+  teachingUnits TeachingUnit[]
+
+  @@unique([classGroupId, teacherId])
+  @@map("assignments")
+}
+
+model TeachingUnit {
+  id              String     @id @default(uuid())
+  subjectId       String
+  assignmentId    String
+  type            TUType
+  name            String
+  conflictGroupId String?
+  schedules       Schedule[]
+  assignment      Assignment @relation(fields: [assignmentId], references: [id])
+  subject         Subject    @relation(fields: [subjectId], references: [id])
+
+  @@unique([assignmentId, subjectId])
+  @@map("teaching_units")
+}
+
+model Schedule {
+  id             String                   @id @default(uuid())
+  teachingUnitId String
+  roomId         String?
+  dayOfWeek      Int
+  periodStart    Int
+  periodEnd      Int
+  mode           ScheduleMode
+  academicYear   String
+  weekOfYear     Int
+  violations     ConstraintViolationLog[]
+  room           Room?                    @relation(fields: [roomId], references: [id])
+  teachingUnit   TeachingUnit             @relation(fields: [teachingUnitId], references: [id])
+
+  @@map("schedules")
+}
+
+model ScheduleVersion {
+  id           String   @id @default(uuid())
+  versionLabel String
+  snapshot     Json
+  createdAt    DateTime @default(now())
+  createdBy    String
+
+  @@map("schedule_versions")
+}
+
+model ConstraintViolationLog {
+  id             String    @id @default(uuid())
+  scheduleId     String
+  constraintStep Int
+  message        String
+  resolvedAt     DateTime?
+  createdAt      DateTime  @default(now())
+  severity       String    @default("error")
+  schedule       Schedule  @relation(fields: [scheduleId], references: [id])
+
+  @@map("constraint_violation_logs")
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String
+  role         UserRole
+  refId        String?
+  refreshToken String?
+  createdAt    DateTime @default(now())
+  name         String?
+  students     Student?
+  teachers     Teacher?
+
+  @@map("users")
+}
+
+enum RoomType {
+  THEORY
+  PRACTICE
+  HALL
+}
+
+enum TUType {
+  THEORY
+  PRACTICE
+  EXERCISE
+}
+
+enum ScheduleMode {
+  ONLINE
+  OFFLINE
+}
+
+enum UserRole {
+  ADMIN
+  TEACHER
+  STUDENT
+}
