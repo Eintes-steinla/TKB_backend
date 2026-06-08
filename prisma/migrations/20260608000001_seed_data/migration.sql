@@ -6483,7 +6483,7 @@ INSERT INTO schedules (id, "teachingUnitId", "roomId", "dayOfWeek", "periodStart
   ('fad74250-ec03-4cab-9064-664cac3b2b79', 'dc6cba75-821b-4740-8525-d361278a9152', 'room_a17_401', 2, 1, 3, '2024-2025', 2, 'OFFLINE'),
   ('830616bc-ef3a-4c8f-9521-f455a3707676', 'dc6cba75-821b-4740-8525-d361278a9152', 'room_a17_401', 2, 1, 3, '2024-2025', 3, 'OFFLINE'),
   ('11a9b61e-f092-4df3-9dad-4573337d87e1', 'dc6cba75-821b-4740-8525-d361278a9152', 'room_a17_401', 2, 1, 3, '2024-2025', 4, 'OFFLINE'),
-  ('156c603b-fa3d-46e0-a365-3de5a335d5da', 'dc6cba75-821b-4740-8525-d361278a9152', 'room_a17_401', 2, 1, 3, '2024-2025', 5, 'OFFLINE'),;
+  ('156c603b-fa3d-46e0-a365-3de5a335d5da', 'dc6cba75-821b-4740-8525-d361278a9152', 'room_a17_401', 2, 1, 3, '2024-2025', 5, 'OFFLINE');
 
 INSERT INTO schedules (id, "teachingUnitId", "roomId", "dayOfWeek", "periodStart", "periodEnd", "academicYear", "weekOfYear", mode) VALUES
   ('637b9088-d42c-4477-ac19-dcc47c9b919b', 'dc6cba75-821b-4740-8525-d361278a9152', 'room_a17_401', 2, 1, 3, '2024-2025', 6, 'OFFLINE'),
@@ -6985,7 +6985,7 @@ INSERT INTO schedules (id, "teachingUnitId", "roomId", "dayOfWeek", "periodStart
   ('6808b215-e3e1-4857-9033-73ccc495302b', '4d1c3aa0-a1d2-4008-8f84-ca9f9f1d6560', 'room_pm_407', 7, 6, 8, '2024-2025', 4, 'OFFLINE'),
   ('e8c0af1d-45d0-47ae-9523-00ba5f353bc2', '4d1c3aa0-a1d2-4008-8f84-ca9f9f1d6560', 'room_pm_407', 3, 1, 3, '2024-2025', 4, 'OFFLINE'),
   ('74eb9c78-3391-469f-a202-91c7823e7b11', '4d1c3aa0-a1d2-4008-8f84-ca9f9f1d6560', 'room_pm_407', 7, 6, 8, '2024-2025', 5, 'OFFLINE'),
-  ('822f954a-bf61-4cff-aef2-6530a46df856', '4d1c3aa0-a1d2-4008-8f84-ca9f9f1d6560', 'room_pm_407', 3, 1, 3, '2024-2025', 5, 'OFFLINE'),;
+  ('822f954a-bf61-4cff-aef2-6530a46df856', '4d1c3aa0-a1d2-4008-8f84-ca9f9f1d6560', 'room_pm_407', 3, 1, 3, '2024-2025', 5, 'OFFLINE');
 
 INSERT INTO schedules (id, "teachingUnitId", "roomId", "dayOfWeek", "periodStart", "periodEnd", "academicYear", "weekOfYear", mode) VALUES
   ('9524c90f-4981-4ec9-a6a4-b2d03430d4b2', '4d1c3aa0-a1d2-4008-8f84-ca9f9f1d6560', 'room_pm_407', 7, 6, 8, '2024-2025', 6, 'OFFLINE'),
@@ -7487,7 +7487,7 @@ INSERT INTO schedules (id, "teachingUnitId", "roomId", "dayOfWeek", "periodStart
   ('15e28203-49ac-470e-97dd-f80113ce0a47', '34592d73-5653-4d16-989f-425bd6951e6b', 'room_a17_402', 3, 1, 3, '2024-2025', 12, 'OFFLINE'),
   ('8435947a-7099-4ca9-98d9-deb180331456', '34592d73-5653-4d16-989f-425bd6951e6b', 'room_a17_402', 3, 1, 3, '2024-2025', 13, 'OFFLINE'),
   ('bcf8670f-9081-49c6-a05c-6a796da5f538', '34592d73-5653-4d16-989f-425bd6951e6b', 'room_a17_402', 3, 1, 3, '2024-2025', 14, 'OFFLINE'),
-  ('729e44a2-6d15-4d9b-8ecb-5e9d3a17b76e', '34592d73-5653-4d16-989f-425bd6951e6b', 'room_a17_402', 3, 1, 3, '2024-2025', 15, 'OFFLINE'),;
+  ('729e44a2-6d15-4d9b-8ecb-5e9d3a17b76e', '34592d73-5653-4d16-989f-425bd6951e6b', 'room_a17_402', 3, 1, 3, '2024-2025', 15, 'OFFLINE');
 
 INSERT INTO schedules (id, "teachingUnitId", "roomId", "dayOfWeek", "periodStart", "periodEnd", "academicYear", "weekOfYear", mode) VALUES
   ('0cf8bd39-afaa-4700-a373-d85e881e292e', '1b0d9b5a-d203-44a7-9f8b-dae03e233282', 'room_1a_102', 3, 6, 8, '2024-2025', 1, 'OFFLINE'),
