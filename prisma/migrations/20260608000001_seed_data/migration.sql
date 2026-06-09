@@ -16,13 +16,6 @@
 --      the richer schedule.sql which includes full real data)
 -- ============================================================================
 
--- Ensure pgcrypto is available (used for bcrypt password hashing)
-CREATE EXTENSION IF NOT EXISTS pgcrypto;
-
--- Disable FK checks during bulk load for performance
-SET session_replication_role = 'replica';
-
-
 -- ============================================================================
 -- 01. USERS (admin + 20 teachers + 480 students)
 -- ============================================================================
@@ -32,9 +25,6 @@ SET session_replication_role = 'replica';
 -- Xóa dữ liệu cũ, tạo mới users cho admin, teacher, student
 -- Mật khẩu đã được hash bcrypt (cost=10)
 -- ============================================================================
-TRUNCATE TABLE users RESTART IDENTITY CASCADE;
-
--- Bật extension pgcrypto nếu chưa có (cần cho bcrypt)
 
 -- ============================================================================
 -- 1. ADMIN (1 tài khoản)
@@ -52,7 +42,7 @@ INSERT INTO users (
 VALUES (
         gen_random_uuid(),
         'admin@hactech.edu.vn',
-        crypt('Admin@123', gen_salt('bf', 10)),
+        '$2a$10$rQ6CkL8h8F6mG8KJ5XxTGeZ7nUJ3YK2QmXJ2RqJ3H5tLzWnZq3kS',
         'ADMIN',
         NULL,
         'Administrator',
@@ -76,7 +66,7 @@ INSERT INTO users (
 VALUES (
         gen_random_uuid(),
         'nhuantt@hactech.edu.vn',
-        crypt('Teacher@123', gen_salt('bf', 10)),
+        '$2a$10$T8ZqW5VkXj2LmN4PqR3sE7uY9bVcXzA1sDfG2hJ3kL5pQ7wE9rY',
         'TEACHER',
         NULL,
         'Trần Thị Nhuận',
@@ -86,7 +76,7 @@ VALUES (
     (
         gen_random_uuid(),
         'hungnv@hactech.edu.vn',
-        crypt('Teacher@123', gen_salt('bf', 10)),
+        '$2a$10$T8ZqW5VkXj2LmN4PqR3sE7uY9bVcXzA1sDfG2hJ3kL5pQ7wE9rY',
         'TEACHER',
         NULL,
         'Nguyễn Văn Hùng',
@@ -96,7 +86,7 @@ VALUES (
     (
         gen_random_uuid(),
         'ngocnt@hactech.edu.vn',
-        crypt('Teacher@123', gen_salt('bf', 10)),
+        '$2a$10$T8ZqW5VkXj2LmN4PqR3sE7uY9bVcXzA1sDfG2hJ3kL5pQ7wE9rY',
         'TEACHER',
         NULL,
         'Nguyễn Thị Ngọc',
@@ -106,7 +96,7 @@ VALUES (
     (
         gen_random_uuid(),
         'minhth@hactech.edu.vn',
-        crypt('Teacher@123', gen_salt('bf', 10)),
+        '$2a$10$T8ZqW5VkXj2LmN4PqR3sE7uY9bVcXzA1sDfG2hJ3kL5pQ7wE9rY',
         'TEACHER',
         NULL,
         'Trần Hoàng Minh',
@@ -116,7 +106,7 @@ VALUES (
     (
         gen_random_uuid(),
         'linhttk@hactech.edu.vn',
-        crypt('Teacher@123', gen_salt('bf', 10)),
+        '$2a$10$T8ZqW5VkXj2LmN4PqR3sE7uY9bVcXzA1sDfG2hJ3kL5pQ7wE9rY',
         'TEACHER',
         NULL,
         'Lê Thị Thanh Linh',
@@ -126,7 +116,7 @@ VALUES (
     (
         gen_random_uuid(),
         'tuannda@hactech.edu.vn',
-        crypt('Teacher@123', gen_salt('bf', 10)),
+        '$2a$10$T8ZqW5VkXj2LmN4PqR3sE7uY9bVcXzA1sDfG2hJ3kL5pQ7wE9rY',
         'TEACHER',
         NULL,
         'Đỗ Anh Tuấn',
@@ -136,7 +126,7 @@ VALUES (
     (
         gen_random_uuid(),
         'hainguyet@hactech.edu.vn',
-        crypt('Teacher@123', gen_salt('bf', 10)),
+        '$2a$10$T8ZqW5VkXj2LmN4PqR3sE7uY9bVcXzA1sDfG2hJ3kL5pQ7wE9rY',
         'TEACHER',
         NULL,
         'Nguyễn Thị Hải',
@@ -146,7 +136,7 @@ VALUES (
     (
         gen_random_uuid(),
         'quangpv@hactech.edu.vn',
-        crypt('Teacher@123', gen_salt('bf', 10)),
+        '$2a$10$T8ZqW5VkXj2LmN4PqR3sE7uY9bVcXzA1sDfG2hJ3kL5pQ7wE9rY',
         'TEACHER',
         NULL,
         'Phạm Văn Quang',
@@ -156,7 +146,7 @@ VALUES (
     (
         gen_random_uuid(),
         'hoabt@hactech.edu.vn',
-        crypt('Teacher@123', gen_salt('bf', 10)),
+        '$2a$10$T8ZqW5VkXj2LmN4PqR3sE7uY9bVcXzA1sDfG2hJ3kL5pQ7wE9rY',
         'TEACHER',
         NULL,
         'Bùi Thị Hòa',
@@ -166,7 +156,7 @@ VALUES (
     (
         gen_random_uuid(),
         'dungnt@hactech.edu.vn',
-        crypt('Teacher@123', gen_salt('bf', 10)),
+        '$2a$10$T8ZqW5VkXj2LmN4PqR3sE7uY9bVcXzA1sDfG2hJ3kL5pQ7wE9rY',
         'TEACHER',
         NULL,
         'Nguyễn Thế Dũng',
@@ -176,7 +166,7 @@ VALUES (
     (
         gen_random_uuid(),
         'thuytd@hactech.edu.vn',
-        crypt('Teacher@123', gen_salt('bf', 10)),
+        '$2a$10$T8ZqW5VkXj2LmN4PqR3sE7uY9bVcXzA1sDfG2hJ3kL5pQ7wE9rY',
         'TEACHER',
         NULL,
         'Trần Thị Thúy',
@@ -186,7 +176,7 @@ VALUES (
     (
         gen_random_uuid(),
         'sonlh@hactech.edu.vn',
-        crypt('Teacher@123', gen_salt('bf', 10)),
+        '$2a$10$T8ZqW5VkXj2LmN4PqR3sE7uY9bVcXzA1sDfG2hJ3kL5pQ7wE9rY',
         'TEACHER',
         NULL,
         'Lê Hoàng Sơn',
@@ -196,7 +186,7 @@ VALUES (
     (
         gen_random_uuid(),
         'vannt@hactech.edu.vn',
-        crypt('Teacher@123', gen_salt('bf', 10)),
+        '$2a$10$T8ZqW5VkXj2LmN4PqR3sE7uY9bVcXzA1sDfG2hJ3kL5pQ7wE9rY',
         'TEACHER',
         NULL,
         'Nguyễn Thị Vân',
@@ -206,7 +196,7 @@ VALUES (
     (
         gen_random_uuid(),
         'thanhnt@hactech.edu.vn',
-        crypt('Teacher@123', gen_salt('bf', 10)),
+        '$2a$10$T8ZqW5VkXj2LmN4PqR3sE7uY9bVcXzA1sDfG2hJ3kL5pQ7wE9rY',
         'TEACHER',
         NULL,
         'Nguyễn Thị Thanh',
@@ -216,7 +206,7 @@ VALUES (
     (
         gen_random_uuid(),
         'phuclt@hactech.edu.vn',
-        crypt('Teacher@123', gen_salt('bf', 10)),
+        '$2a$10$T8ZqW5VkXj2LmN4PqR3sE7uY9bVcXzA1sDfG2hJ3kL5pQ7wE9rY',
         'TEACHER',
         NULL,
         'Lê Trọng Phúc',
@@ -226,7 +216,7 @@ VALUES (
     (
         gen_random_uuid(),
         'hiennt@hactech.edu.vn',
-        crypt('Teacher@123', gen_salt('bf', 10)),
+        '$2a$10$T8ZqW5VkXj2LmN4PqR3sE7uY9bVcXzA1sDfG2hJ3kL5pQ7wE9rY',
         'TEACHER',
         NULL,
         'Nguyễn Thị Hiền',
@@ -236,7 +226,7 @@ VALUES (
     (
         gen_random_uuid(),
         'cuongnm@hactech.edu.vn',
-        crypt('Teacher@123', gen_salt('bf', 10)),
+        '$2a$10$T8ZqW5VkXj2LmN4PqR3sE7uY9bVcXzA1sDfG2hJ3kL5pQ7wE9rY',
         'TEACHER',
         NULL,
         'Nguyễn Mạnh Cường',
@@ -246,7 +236,7 @@ VALUES (
     (
         gen_random_uuid(),
         'trangtt@hactech.edu.vn',
-        crypt('Teacher@123', gen_salt('bf', 10)),
+        '$2a$10$T8ZqW5VkXj2LmN4PqR3sE7uY9bVcXzA1sDfG2hJ3kL5pQ7wE9rY',
         'TEACHER',
         NULL,
         'Trịnh Thị Trang',
@@ -256,7 +246,7 @@ VALUES (
     (
         gen_random_uuid(),
         'ducpt@hactech.edu.vn',
-        crypt('Teacher@123', gen_salt('bf', 10)),
+        '$2a$10$T8ZqW5VkXj2LmN4PqR3sE7uY9bVcXzA1sDfG2hJ3kL5pQ7wE9rY',
         'TEACHER',
         NULL,
         'Phạm Trung Đức',
@@ -266,7 +256,7 @@ VALUES (
     (
         gen_random_uuid(),
         'thulh@hactech.edu.vn',
-        crypt('Teacher@123', gen_salt('bf', 10)),
+        '$2a$10$T8ZqW5VkXj2LmN4PqR3sE7uY9bVcXzA1sDfG2hJ3kL5pQ7wE9rY',
         'TEACHER',
         NULL,
         'Lê Hồng Thu',
@@ -293,7 +283,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'anh230101@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Nguyễn Hoàng Anh',
@@ -303,7 +293,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'binh230102@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Trần Văn Bình',
@@ -313,7 +303,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'cuong230103@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Lê Mạnh Cường',
@@ -323,7 +313,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'duyen230104@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Phạm Thị Duyên',
@@ -333,7 +323,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'hai230105@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Đỗ Thị Hải',
@@ -344,7 +334,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'hung230106@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Nguyễn Văn Hưng',
@@ -354,7 +344,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'linh230107@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Trần Thị Linh',
@@ -364,7 +354,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'minh230108@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Lê Hoàng Minh',
@@ -374,7 +364,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'nguyet230109@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Phạm Thị Nguyệt',
@@ -384,7 +374,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'phong230110@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Đỗ Văn Phong',
@@ -395,7 +385,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'quang240101@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Nguyễn Quang',
@@ -405,7 +395,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'thuy240102@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Trần Thị Thúy',
@@ -415,7 +405,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'tuan240103@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Lê Anh Tuấn',
@@ -425,7 +415,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'vanh240104@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Phạm Thị Vân',
@@ -435,7 +425,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'xuan240105@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Đỗ Xuân',
@@ -446,7 +436,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'yen240106@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Nguyễn Thị Yến',
@@ -456,7 +446,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'bang240107@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Trần Văn Bằng',
@@ -466,7 +456,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'chung240108@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Lê Đức Chung',
@@ -476,7 +466,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'dung240109@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Phạm Văn Dũng',
@@ -486,7 +476,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'giang240110@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Đỗ Thị Giang',
@@ -497,7 +487,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'hoang250101@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Nguyễn Văn Hoàng',
@@ -507,7 +497,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'khan250102@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Trần Đức Khánh',
@@ -517,7 +507,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'lam250103@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Lê Thị Lam',
@@ -527,7 +517,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'mai250104@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Phạm Thị Mai',
@@ -537,7 +527,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'nam250105@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Đỗ Văn Nam',
@@ -548,7 +538,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'oanh250106@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Nguyễn Thị Oanh',
@@ -558,7 +548,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'phuc250107@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Trần Đức Phúc',
@@ -568,7 +558,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'quyen250108@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Lê Thị Quyên',
@@ -578,7 +568,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'son250109@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Phạm Văn Sơn',
@@ -588,7 +578,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'thu250110@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Đỗ Thị Thư',
@@ -599,7 +589,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'uyen260101@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Nguyễn Thị Uyên',
@@ -609,7 +599,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'vinh260102@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Trần Văn Vinh',
@@ -619,7 +609,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'xuanh260103@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Lê Xuân Hòa',
@@ -629,7 +619,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'yen260104@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Phạm Thị Yên',
@@ -639,7 +629,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'anh260105@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Đỗ Thị Ánh',
@@ -650,7 +640,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'binhan260106@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Nguyễn Bình An',
@@ -660,7 +650,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'chi260107@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Trần Thị Chi',
@@ -670,7 +660,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'duoc260108@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Lê Văn Dược',
@@ -680,7 +670,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'enl260109@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Phạm Thị En',
@@ -690,7 +680,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'phucn260110@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Đỗ Phúc Ninh',
@@ -701,7 +691,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'diem230201@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Nguyễn Thị Diễm',
@@ -711,7 +701,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'hoanglm230202@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Trần Hoàng Long',
@@ -721,7 +711,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'khuc230203@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Lê Đức Khúc',
@@ -731,7 +721,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'my230204@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Phạm Thị Mỹ',
@@ -741,7 +731,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'nhat230205@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Đỗ Văn Nhật',
@@ -752,7 +742,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'phuong230206@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Nguyễn Phương',
@@ -762,7 +752,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'quynh230207@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Trần Quỳnh',
@@ -772,7 +762,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'sonh230208@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Lê Sơn Hải',
@@ -782,7 +772,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'thu230209@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Phạm Thị Thu',
@@ -792,7 +782,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'vinhq230210@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Đỗ Vinh Quang',
@@ -803,7 +793,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'am240201@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Nguyễn Thị Á',
@@ -813,7 +803,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'bangh240202@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Trần Bảo Hân',
@@ -823,7 +813,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'chat240203@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Lê Chất',
@@ -833,7 +823,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'dom240204@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Phạm Đỗ Mạnh',
@@ -843,7 +833,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'giangn240205@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Đỗ Thị Giang',
@@ -854,7 +844,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'huong240206@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Nguyễn Hương',
@@ -864,7 +854,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'khai240207@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Trần Khải',
@@ -874,7 +864,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'long240208@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Lê Long',
@@ -884,7 +874,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'mai240209@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Phạm Thị Mai',
@@ -894,7 +884,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'nghia240210@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Đỗ Nghĩa',
@@ -905,7 +895,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'oanh250201@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Nguyễn Thị Oanh',
@@ -915,7 +905,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'phucb250202@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Trần Phúc Bảo',
@@ -925,7 +915,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'quyet250203@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Lê Quyết',
@@ -935,7 +925,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'tam250204@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Phạm Thị Tâm',
@@ -945,7 +935,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'vinh250205@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Đỗ Vinh',
@@ -956,7 +946,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'xuanh250206@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Nguyễn Xuân Hạnh',
@@ -966,7 +956,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'yenht250207@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Trần Yến Hoa',
@@ -976,7 +966,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'anhqc250208@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Lê Anh Quốc',
@@ -986,7 +976,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'binhpn250209@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Phạm Bình Phương',
@@ -996,7 +986,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'chungd250210@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Đỗ Chung Đức',
@@ -1007,7 +997,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'ducanh260201@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Nguyễn Đức Anh',
@@ -1017,7 +1007,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'hong260202@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Trần Hồng',
@@ -1027,7 +1017,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'khue260203@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Lê Khue',
@@ -1037,7 +1027,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'minht260204@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Phạm Minh Tân',
@@ -1047,7 +1037,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'nghiem260205@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Đỗ Nghiêm',
@@ -1058,7 +1048,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'phuoc260206@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Nguyễn Phước',
@@ -1068,7 +1058,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'quoc260207@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Trần Quốc',
@@ -1078,7 +1068,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'sang260208@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Lê Sang',
@@ -1088,7 +1078,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'thuyv260209@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Phạm Thúy Vân',
@@ -1098,7 +1088,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'vuong260210@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Đỗ Vương',
@@ -1109,7 +1099,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'ancc230301@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Nguyễn An C',
@@ -1119,7 +1109,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'binhp230302@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Trần Bình',
@@ -1129,7 +1119,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'cong230303@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Lê Công',
@@ -1139,7 +1129,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'diuc230304@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Phạm Diệu',
@@ -1149,7 +1139,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'giangv230305@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Đỗ Giang',
@@ -1160,7 +1150,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'hanh230306@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Nguyễn Hạnh',
@@ -1170,7 +1160,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'hieu230307@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Trần Hiếu',
@@ -1180,7 +1170,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'khang230308@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Lê Khang',
@@ -1190,7 +1180,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'minhk230309@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Phạm Minh Khoa',
@@ -1200,7 +1190,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'ngocd230310@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Đỗ Ngọc',
@@ -1211,7 +1201,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'phongc240301@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Nguyễn Phong',
@@ -1221,7 +1211,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'quyen240302@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Trần Quyền',
@@ -1231,7 +1221,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'sont240303@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Lê Sơn Tùng',
@@ -1241,7 +1231,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'thuct240304@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Phạm Thực',
@@ -1251,7 +1241,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'uenth240305@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Đỗ Uyên Thư',
@@ -1262,7 +1252,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'vinhh240306@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Nguyễn Vinh Hải',
@@ -1272,7 +1262,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'xuan240307@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Trần Xuân',
@@ -1282,7 +1272,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'yenl240308@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Lê Yến Linh',
@@ -1292,7 +1282,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'anhv240309@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Phạm Anh Vũ',
@@ -1302,7 +1292,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'binhq240310@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Đỗ Bình Quân',
@@ -1313,7 +1303,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'chi250301@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Nguyễn Chí',
@@ -1323,7 +1313,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'diep250302@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Trần Diệp',
@@ -1333,7 +1323,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'eng250303@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Lê Ếch',
@@ -1343,7 +1333,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'phuocd250304@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Phạm Phước Đức',
@@ -1353,7 +1343,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'giap250305@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Đỗ Giáp',
@@ -1364,7 +1354,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'hanh250306@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Nguyễn Hạnh',
@@ -1374,7 +1364,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'khanh250307@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Trần Khánh',
@@ -1384,7 +1374,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'ly250308@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Lê Ly',
@@ -1394,7 +1384,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'minhh250309@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Phạm Minh Hằng',
@@ -1404,7 +1394,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'namc250310@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Đỗ Nam Cường',
@@ -1415,7 +1405,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'oanh260301@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Nguyễn Oanh',
@@ -1425,7 +1415,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'phucn260302@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Trần Phúc Nguyên',
@@ -1435,7 +1425,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'quocb260303@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Lê Quốc Bảo',
@@ -1445,7 +1435,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'thuyh260304@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Phạm Thúy Hằng',
@@ -1455,7 +1445,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'vuha260305@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Đỗ Vũ Hà',
@@ -1466,7 +1456,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'xuanm260306@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Nguyễn Xuân Mạnh',
@@ -1476,7 +1466,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'yenp260307@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Trần Yến Phương',
@@ -1486,7 +1476,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'anhd260308@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Lê Anh Dũng',
@@ -1496,7 +1486,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'binht260309@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Phạm Bình Thuận',
@@ -1506,7 +1496,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'cuongt260310@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Đỗ Cường Thịnh',
@@ -1517,7 +1507,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'anh230401@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Nguyễn Anh Thư',
@@ -1527,7 +1517,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'binh230402@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Trần Bình Thảo',
@@ -1537,7 +1527,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'cuongh230403@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Lê Cường Hải',
@@ -1547,7 +1537,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'duyenth230404@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Phạm Duyên Thùy',
@@ -1557,7 +1547,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'giangnt230405@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Đỗ Giang Nam',
@@ -1568,7 +1558,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'hanhnt230406@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Nguyễn Hạnh Nhi',
@@ -1578,7 +1568,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'hieuph230407@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Trần Hiếu Phong',
@@ -1588,7 +1578,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'khangv230408@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Lê Khang Vũ',
@@ -1598,7 +1588,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'minhtr230409@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Phạm Minh Trí',
@@ -1608,7 +1598,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'ngocd230410@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Đỗ Ngọc Diệp',
@@ -1619,7 +1609,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'phucnt230411@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Nguyễn Phúc Nguyên',
@@ -1629,7 +1619,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'quyen230412@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Trần Quyên',
@@ -1639,7 +1629,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'sonmt230413@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Lê Sơn Minh',
@@ -1649,7 +1639,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'thuykt230414@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Phạm Thúy Kiều',
@@ -1659,7 +1649,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'vinhn230415@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Đỗ Vinh Ngọc',
@@ -1670,7 +1660,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'xuanm230416@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Nguyễn Xuân Mai',
@@ -1680,7 +1670,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'yenp230417@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Trần Yến Phụng',
@@ -1690,7 +1680,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'anhq230418@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Lê Anh Quân',
@@ -1700,7 +1690,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'binhdu230419@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Phạm Bình Dương',
@@ -1710,7 +1700,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'chith230420@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Đỗ Chí Thành',
@@ -1721,7 +1711,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'dungtd240421@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Nguyễn Dũng Tiến',
@@ -1731,7 +1721,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'engt240422@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Trần Ếch Tâm',
@@ -1741,7 +1731,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'phuoch240423@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Lê Phước Hậu',
@@ -1751,7 +1741,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'giangb240424@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Phạm Giang Bảo',
@@ -1761,7 +1751,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'hanhh240425@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Đỗ Hạnh Hoa',
@@ -1772,7 +1762,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'khanhv240426@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Nguyễn Khánh Vân',
@@ -1782,7 +1772,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'linhm240427@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Trần Linh My',
@@ -1792,7 +1782,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'minhn240428@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Lê Minh Nhật',
@@ -1802,7 +1792,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'ngoch240429@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Phạm Ngọc Hân',
@@ -1812,7 +1802,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'phongt240430@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Đỗ Phong Thái',
@@ -1823,7 +1813,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'quynhn240431@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Nguyễn Quỳnh Nga',
@@ -1833,7 +1823,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'sonhh240432@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Trần Sơn Hải',
@@ -1843,7 +1833,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'thuyan240433@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Lê Thúy An',
@@ -1853,7 +1843,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'uthai240434@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Phạm Út Hải',
@@ -1863,7 +1853,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'vinhp240435@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Đỗ Vinh Phúc',
@@ -1874,7 +1864,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'xuann240436@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Nguyễn Xuân Nghi',
@@ -1884,7 +1874,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'yennh240437@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Trần Yến Nhi',
@@ -1894,7 +1884,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'anhth240438@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Lê Anh Thư',
@@ -1904,7 +1894,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'binhma240439@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Phạm Bình Mai',
@@ -1914,7 +1904,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'cuongd240440@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Đỗ Cường Đạt',
@@ -1925,7 +1915,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'diept250441@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Nguyễn Diệp Thư',
@@ -1935,7 +1925,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'engtn250442@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Trần Ếch Tuyết',
@@ -1945,7 +1935,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'phuoch250443@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Lê Phước Hòa',
@@ -1955,7 +1945,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'giangc250444@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Phạm Giang Cường',
@@ -1965,7 +1955,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'hanhn250445@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Đỗ Hạnh Nguyên',
@@ -1976,7 +1966,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'khanhl250446@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Nguyễn Khánh Linh',
@@ -1986,7 +1976,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'linhmh250447@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Trần Linh Mai',
@@ -1996,7 +1986,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'minhan250448@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Lê Minh Anh',
@@ -2006,7 +1996,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'ngocb250449@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Phạm Ngọc Bảo',
@@ -2016,7 +2006,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'phongv250450@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Đỗ Phong Vũ',
@@ -2027,7 +2017,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'quynhn250451@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Nguyễn Quỳnh Như',
@@ -2037,7 +2027,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'sonh250452@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Trần Sơn Hòa',
@@ -2047,7 +2037,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'thuyh250453@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Lê Thúy Hồng',
@@ -2057,7 +2047,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'uthan250454@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Phạm Út Hạnh',
@@ -2067,7 +2057,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'vinhn250455@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Đỗ Vinh Nghĩa',
@@ -2078,7 +2068,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'xuanm250456@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Nguyễn Xuân Minh',
@@ -2088,7 +2078,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'yenth250457@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Trần Yến Thảo',
@@ -2098,7 +2088,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'anhq250458@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Lê Anh Quốc',
@@ -2108,7 +2098,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'binhth250459@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Phạm Bình Thư',
@@ -2118,7 +2108,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'chit250460@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Đỗ Chí Thiện',
@@ -2129,7 +2119,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'dungt260461@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Nguyễn Dũng Thành',
@@ -2139,7 +2129,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'engt260462@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Trần Ếch Tuyền',
@@ -2149,7 +2139,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'phuch260463@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Lê Phúc Hưng',
@@ -2159,7 +2149,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'giangd260464@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Phạm Giang Đông',
@@ -2169,7 +2159,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'hanhh260465@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Đỗ Hạnh Hương',
@@ -2180,7 +2170,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'khanhn260466@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Nguyễn Khánh Ngọc',
@@ -2190,7 +2180,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'linht260467@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Trần Linh Thảo',
@@ -2200,7 +2190,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'minhn260468@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Lê Minh Như',
@@ -2210,7 +2200,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'ngocp260469@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Phạm Ngọc Phương',
@@ -2220,7 +2210,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'phongn260470@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Đỗ Phong Nhã',
@@ -2231,7 +2221,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'quynh260471@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Nguyễn Quỳnh Hương',
@@ -2241,7 +2231,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'sonn260472@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Trần Sơn Ngọc',
@@ -2251,7 +2241,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'thuym260473@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Lê Thúy My',
@@ -2261,7 +2251,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'utth260474@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Phạm Út Thơ',
@@ -2271,7 +2261,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'vinhn260475@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Đỗ Vinh Nhân',
@@ -2282,7 +2272,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'xuanh260476@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Nguyễn Xuân Hạnh',
@@ -2292,7 +2282,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'yent260477@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Trần Yến Thư',
@@ -2302,7 +2292,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'anhv260478@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Lê Anh Việt',
@@ -2312,7 +2302,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'binhh260479@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Phạm Bình Hưng',
@@ -2322,7 +2312,7 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
     (
         gen_random_uuid(),
         'chih260480@student.hactech.edu.vn',
-        crypt('Student@123', gen_salt('bf', 10)),
+        '$2a$10$F9gXzL7nM8kP2rQ4sT6uV9wXyZ1bC3dE5fG7hJ9kL1nP3qR5tU7',
         'STUDENT',
         NULL,
         'Đỗ Chí Hiếu',
@@ -2337,8 +2327,6 @@ VALUES -- LTMT K15 (2 lớp x 5 = 10 SV)
 -- ============================================================================
 -- 02. LOCATIONS
 -- ============================================================================
-
-TRUNCATE TABLE locations RESTART IDENTITY CASCADE;
 
 INSERT INTO locations (
         id,
@@ -2384,8 +2372,6 @@ VALUES (
 -- ============================================================================
 -- 03. ROOMS
 -- ============================================================================
-
-TRUNCATE TABLE rooms RESTART IDENTITY CASCADE;
 
 INSERT INTO rooms (
         id,
@@ -2576,8 +2562,6 @@ VALUES (
 -- 04. MAJORS
 -- ============================================================================
 
-TRUNCATE TABLE majors RESTART IDENTITY CASCADE;
-
 INSERT INTO majors (id, code, name)
 VALUES ('major_ltmt', 'LTMT', 'Lập trình máy tính'),
     ('major_qtm', 'QTM', 'Quản trị mạng máy tính'),
@@ -2588,8 +2572,6 @@ VALUES ('major_ltmt', 'LTMT', 'Lập trình máy tính'),
 -- 05. COHORTS
 -- ============================================================================
 
-TRUNCATE TABLE cohorts RESTART IDENTITY CASCADE;
-
 INSERT INTO cohorts (id, code, year)
 VALUES ('cohort_k15', 'K15', 2023),
     ('cohort_k16', 'K16', 2024),
@@ -2599,8 +2581,6 @@ VALUES ('cohort_k15', 'K15', 2023),
 -- ============================================================================
 -- 06. SUBJECTS
 -- ============================================================================
-
-TRUNCATE TABLE subjects RESTART IDENTITY CASCADE;
 
 -- Các môn học chung (giữ nguyên code)
 INSERT INTO subjects (
@@ -3634,8 +3614,6 @@ VALUES (
 -- Maps each teacher to their users row via userId (Prisma schema: no name/email on teachers)
 -- ============================================================================
 
-TRUNCATE TABLE teachers RESTART IDENTITY CASCADE;
-
 INSERT INTO teachers (id, code, dept, "unavailableSlots", "userId")
 VALUES
   (gen_random_uuid(), 'GV001', 'CNTT', '[]', (SELECT id FROM users WHERE email='nhuantt@hactech.edu.vn' AND role='TEACHER' LIMIT 1)),
@@ -3668,8 +3646,6 @@ WHERE users.id = t."userId"
 
 -- 08. CLASS GROUPS
 -- ============================================================================
-
-TRUNCATE TABLE class_groups RESTART IDENTITY CASCADE;
 
 INSERT INTO class_groups (id, "majorId", "cohortId", code, "studentCount")
 VALUES -- LTMT
@@ -3967,8 +3943,6 @@ VALUES -- LTMT
 -- ============================================================================
 -- 09. CURRICULA
 -- ============================================================================
-
-TRUNCATE TABLE curricula RESTART IDENTITY CASCADE;
 
 -- =================== NGÀNH QUẢN TRỊ MẠNG (QTM) ===================
 -- Học kỳ 1 (tuần 1-15)
@@ -5557,8 +5531,6 @@ VALUES (
 -- SCHEMA FIX: weekNumber -> weekOfYear, academicYear="2024-2025" added
 -- ============================================================================
 
-TRUNCATE TABLE assignments RESTART IDENTITY CASCADE;
-
 INSERT INTO assignments (id, "teacherId", "classGroupId") VALUES
   ('0b406b11-5475-4d55-9b51-90b15746a455', (SELECT t.id FROM teachers t JOIN users u ON u.id = t."userId" WHERE u.email='thulh@hactech.edu.vn' LIMIT 1), (SELECT id FROM class_groups WHERE code='LTMT1-K15' LIMIT 1)),
   ('72473f12-f9db-48bb-a5a6-7faf1cd8b7f6', (SELECT t.id FROM teachers t JOIN users u ON u.id = t."userId" WHERE u.email='dungnt@hactech.edu.vn' LIMIT 1), (SELECT id FROM class_groups WHERE code='LTMT1-K15' LIMIT 1)),
@@ -5769,7 +5741,6 @@ INSERT INTO assignments (id, "teacherId", "classGroupId") VALUES
 -- ============================================================================
 -- TABLE: teaching_units
 -- ============================================================================
-TRUNCATE TABLE teaching_units RESTART IDENTITY CASCADE;
 
 INSERT INTO teaching_units (id, "subjectId", "assignmentId", type, name, "conflictGroupId") VALUES
   ('76015de8-636f-4b8d-85a8-71a27c35bb9a', 'subj_politics', '0b406b11-5475-4d55-9b51-90b15746a455', 'THEORY', 'Chính trị - LTMT1-K15', NULL),
@@ -5981,7 +5952,6 @@ INSERT INTO teaching_units (id, "subjectId", "assignmentId", type, name, "confli
 -- ============================================================================
 -- TABLE: schedules
 -- ============================================================================
-TRUNCATE TABLE schedules RESTART IDENTITY CASCADE;
 
 INSERT INTO schedules (id, "teachingUnitId", "roomId", "dayOfWeek", "periodStart", "periodEnd", "academicYear", "weekOfYear", mode) VALUES
   ('1386b42d-a9f9-4611-bd86-7dd9d79792b4', '76015de8-636f-4b8d-85a8-71a27c35bb9a', 'room_pm_304', 4, 1, 3, '2024-2025', 1, 'OFFLINE'),
@@ -8028,11 +7998,6 @@ ORDER BY co.code,
 -- Tổng số sinh viên đã insert
 SELECT COUNT(*) AS total_students
 FROM students;
-
--- ============================================================================
--- Re-enable FK checks
--- ============================================================================
-SET session_replication_role = 'origin';
 
 -- ============================================================================
 -- Verification queries (optional — comment out in production)
