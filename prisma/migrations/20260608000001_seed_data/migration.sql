@@ -18,7 +18,6 @@
 -- Ensure pgcrypto is available (used for bcrypt password hashing)
 -- CREATE EXTENSION IF NOT EXISTS pgcrypto;
 -- Disable FK checks during bulk load for performance
--- SET session_replication_role = 'replica';
 -- ============================================================================
 -- 01. USERS (admin + 20 teachers + 480 students)
 -- ============================================================================
@@ -31441,8 +31440,6 @@ FROM students;
 -- ============================================================================
 -- Re-enable FK checks
 -- ============================================================================
-SET session_replication_role = 'origin';
-
 -- ============================================================================
 -- Verification queries (optional — comment out in production)
 -- ============================================================================
