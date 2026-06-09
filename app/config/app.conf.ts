@@ -5,7 +5,9 @@ export const appConf = {
   env: process.env.NODE_ENV ?? "development",
   port: parseInt(process.env.PORT ?? "3000", 10),
   apiPrefix: process.env.API_PREFIX ?? "/api/v1",
-  corsOrigin: process.env.CORS_ORIGIN || "https://tkb-web-chi.vercel.app",
+  corsOrigin: process.env.CORS_ORIGIN
+    ? process.env.CORS_ORIGIN.split(",").map((s) => s.trim())
+    : ["https://tkb-web-chi.vercel.app"],
   rateLimit: {
     windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS ?? "900000", 10),
     max: parseInt(process.env.RATE_LIMIT_MAX ?? "100", 10),
