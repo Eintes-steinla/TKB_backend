@@ -23,6 +23,8 @@ async function bootstrap(): Promise<void> {
   const app = express();
   const server = http.createServer(app);
 
+  app.set("trust proxy", 1);
+
   // 4. Apply middleware (helmet, cors, compression, morgan, rate-limit, body-parser)
   applyMiddleware(app);
 
