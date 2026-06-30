@@ -1,38 +1,43 @@
-import admin from "firebase-admin";
+import { initializeApp, cert, getApps, type App } from "firebase-admin/app";
+import { getMessaging } from "firebase-admin/messaging";
 import path from "path";
 
-let initialized = false;
+let app: App | undefined;
 
-function ensureInit() {
-  if (initialized) return;
+function ensureInit(): App {
+  if (app) return app;
+
+  const existing = getApps();
+  if (existing.length > 0) {
+    app = existing[0];
+    return app;
+  }
+
   const serviceAccountPath = path.join(
     process.cwd(),
     "firebase-service-account.json",
   );
-  admin.initializeApp({
-    credential: admin.credential.cert(serviceAccountPath),
+
+  app = initializeApp({
+    credential: cert(serviceAccountPath),
   });
-  initialized = true;
+
+  return app;
 }
 
-/**
- * Gửi thông báo tới một topic (role_student / role_teacher).
- * Dùng cho demo — không cần lưu device token vào DB.
- */
 export async function sendNotificationToTopic(
   topic: string,
   title: string,
   body: string,
 ): Promise<void> {
   try {
-    ensureInit();
-    await admin.messaging().send({
+    const firebaseApp = ensureInit();
+    await getMessaging(firebaseApp).send({
       topic,
       notification: { title, body },
     });
     console.log(`[FCM] Sent to topic "${topic}": ${title}`);
   } catch (err) {
-    // Không throw — FCM lỗi không nên làm fail request update lịch
     console.error("[FCM] Failed to send notification:", err);
   }
 }
