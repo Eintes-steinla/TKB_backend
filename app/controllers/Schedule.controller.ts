@@ -43,17 +43,20 @@ export async function updateScheduleHandler(
       req.body,
     );
     res.status(200).json(schedule);
-
+    // Lấy thông tin chi tiết để hiện trong thông báo
+    const subjectName = schedule.teachingUnit?.subject?.name ?? "Môn học";
+    const classCode = schedule.teachingUnit?.assignment?.classGroup?.code ?? "";
+    const roomCode = schedule.room?.code ?? "chưa xếp phòng";
     // ← thêm: gửi push sau khi đã trả response, không block request
     sendNotificationToTopic(
       "role_student",
-      "Lịch học đã thay đổi",
-      "Quản trị viên vừa cập nhật lịch học của bạn. Mở app để xem chi tiết.",
+      `Lịch học ${subjectName} đã thay đổi`,
+      `Lớp ${classCode} chuyển sang phòng ${roomCode}. Mở app để xem chi tiết.`,
     );
     sendNotificationToTopic(
       "role_teacher",
-      "Lịch dạy đã thay đổi",
-      "Quản trị viên vừa cập nhật lịch dạy của bạn. Mở app để xem chi tiết.",
+      `Lịch dạy ${subjectName} đã thay đổi`,
+      `Lớp ${classCode} chuyển sang phòng ${roomCode}. Mở app để xem chi tiết.`,
     );
   } catch (err) {
     next(err);
