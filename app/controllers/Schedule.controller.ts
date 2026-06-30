@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import * as ScheduleService from "../services/Schedule.service";
+import { sendNotificationToTopic } from "../services/Fcm.service";
 
 export async function createScheduleHandler(
   req: Request,
@@ -42,6 +43,18 @@ export async function updateScheduleHandler(
       req.body,
     );
     res.status(200).json(schedule);
+
+    // ← thêm: gửi push sau khi đã trả response, không block request
+    sendNotificationToTopic(
+      "role_student",
+      "Lịch học đã thay đổi",
+      "Quản trị viên vừa cập nhật lịch học của bạn. Mở app để xem chi tiết.",
+    );
+    sendNotificationToTopic(
+      "role_teacher",
+      "Lịch dạy đã thay đổi",
+      "Quản trị viên vừa cập nhật lịch dạy của bạn. Mở app để xem chi tiết.",
+    );
   } catch (err) {
     next(err);
   }

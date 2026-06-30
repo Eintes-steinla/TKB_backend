@@ -3,6 +3,7 @@ import { prisma } from "../database/Postgres.database";
 import { RoomFilters } from "../models/Room.model";
 import { NotFoundError } from "../middleware/ErrorHandler.middleware";
 import { getSchedulesByRoom } from "../services/Schedule.service";
+import { sendNotificationToTopic } from "../services/Fcm.service";
 
 export async function getRoomsHandler(
   req: Request,
@@ -111,6 +112,17 @@ export async function updateRoomHandler(
       include: { location: true },
     });
     res.status(200).json(room);
+    // ← thêm: thông báo thay đổi phòng học
+    sendNotificationToTopic(
+      "role_student",
+      "Phòng học đã thay đổi",
+      `Phòng ${room.code} có thay đổi thông tin. Mở app để xem chi tiết.`,
+    );
+    sendNotificationToTopic(
+      "role_teacher",
+      "Phòng học đã thay đổi",
+      `Phòng ${room.code} có thay đổi thông tin. Mở app để xem chi tiết.`,
+    );
   } catch (err) {
     next(err);
   }

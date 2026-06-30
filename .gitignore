@@ -36,3 +36,5 @@ logs/
 # Hệ điều hành tự sinh ra
 .DS_Store
 Thumbs.db
+
+firebase-service-account.json
