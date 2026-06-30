@@ -1,6 +1,5 @@
 import { initializeApp, cert, getApps, type App } from "firebase-admin/app";
 import { getMessaging } from "firebase-admin/messaging";
-import path from "path";
 
 let app: App | undefined;
 
@@ -13,13 +12,15 @@ function ensureInit(): App {
     return app;
   }
 
-  const serviceAccountPath = path.join(
-    process.cwd(),
-    "firebase-service-account.json",
-  );
+  const serviceAccountJson = process.env.FIREBASE_SERVICE_ACCOUNT;
+  if (!serviceAccountJson) {
+    throw new Error("FIREBASE_SERVICE_ACCOUNT env var is not set");
+  }
+
+  const serviceAccount = JSON.parse(serviceAccountJson);
 
   app = initializeApp({
-    credential: cert(serviceAccountPath),
+    credential: cert(serviceAccount),
   });
 
   return app;
