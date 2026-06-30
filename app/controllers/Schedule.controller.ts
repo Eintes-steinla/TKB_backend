@@ -1,6 +1,26 @@
 import { Request, Response, NextFunction } from "express";
 import * as ScheduleService from "../services/Schedule.service";
 import { sendNotificationToTopic } from "../services/Fcm.service";
+import { prisma } from "../database/Postgres.database";
+
+const DAY_NAMES: Record<number, string> = {
+  2: "Thứ 2",
+  3: "Thứ 3",
+  4: "Thứ 4",
+  5: "Thứ 5",
+  6: "Thứ 6",
+  7: "Thứ 7",
+};
+
+function getSubjectAndClass(schedule: any): {
+  subjectName: string;
+  classCode: string;
+} {
+  return {
+    subjectName: schedule?.teachingUnit?.subject?.name ?? "Môn học",
+    classCode: schedule?.teachingUnit?.assignment?.classGroup?.code ?? "",
+  };
+}
 
 export async function createScheduleHandler(
   req: Request,
@@ -8,7 +28,6 @@ export async function createScheduleHandler(
   next: NextFunction,
 ): Promise<void> {
   try {
-    // Nếu roomId truyền lên là chuỗi rỗng từ form, chuyển nó về null / undefined
     if (
       req.body.roomId === "" ||
       req.body.roomId === "null" ||
@@ -19,6 +38,21 @@ export async function createScheduleHandler(
 
     const schedule = await ScheduleService.createSchedule(req.body);
     res.status(201).json(schedule);
+
+    // ── Thông báo lịch mới được tạo ──
+    const { subjectName, classCode } = getSubjectAndClass(schedule);
+    const dayLabel =
+      DAY_NAMES[(schedule as any).dayOfWeek] ??
+      `Thứ ${(schedule as any).dayOfWeek}`;
+    const roomCode = (schedule as any).room?.code ?? "chưa xếp phòng";
+
+    const title = `Lịch mới: ${subjectName}${classCode ? ` (${classCode})` : ""}`;
+    const body = `${dayLabel}, tiết ${(schedule as any).periodStart}-${
+      (schedule as any).periodEnd
+    }, tuần ${(schedule as any).weekOfYear}, phòng ${roomCode}.`;
+
+    sendNotificationToTopic("role_student", title, body);
+    sendNotificationToTopic("role_teacher", title, body);
   } catch (err) {
     next(err);
   }
@@ -38,26 +72,77 @@ export async function updateScheduleHandler(
       req.body.roomId = null;
     }
 
+    // Lấy schedule cũ kèm room để so sánh sau khi update
+    const oldSchedule = await prisma.schedule.findUnique({
+      where: { id: req.params.id },
+      include: { room: true },
+    });
+
     const schedule = await ScheduleService.updateSchedule(
       req.params.id,
       req.body,
     );
+
     res.status(200).json(schedule);
-    // Lấy thông tin chi tiết để hiện trong thông báo
-    const subjectName = schedule.teachingUnit?.subject?.name ?? "Môn học";
-    const classCode = schedule.teachingUnit?.assignment?.classGroup?.code ?? "";
-    const roomCode = schedule.room?.code ?? "chưa xếp phòng";
-    // ← thêm: gửi push sau khi đã trả response, không block request
-    sendNotificationToTopic(
-      "role_student",
-      `Lịch học ${subjectName} đã thay đổi`,
-      `Lớp ${classCode} chuyển sang phòng ${roomCode}. Mở app để xem chi tiết.`,
-    );
-    sendNotificationToTopic(
-      "role_teacher",
-      `Lịch dạy ${subjectName} đã thay đổi`,
-      `Lớp ${classCode} chuyển sang phòng ${roomCode}. Mở app để xem chi tiết.`,
-    );
+
+    // ── Gửi thông báo chi tiết theo đúng thay đổi ──
+    if (oldSchedule) {
+      const { subjectName, classCode } = getSubjectAndClass(schedule);
+      const changes: string[] = [];
+
+      const oldRoomCode = oldSchedule.room?.code ?? null;
+      const newRoomCode = (schedule as any).room?.code ?? null;
+      if (oldSchedule.roomId !== (schedule as any).roomId) {
+        changes.push(
+          `chuyển phòng từ ${oldRoomCode ?? "chưa xếp"} sang ${
+            newRoomCode ?? "chưa xếp"
+          }`,
+        );
+      }
+
+      if (
+        oldSchedule.periodStart !== (schedule as any).periodStart ||
+        oldSchedule.periodEnd !== (schedule as any).periodEnd
+      ) {
+        changes.push(
+          `đổi tiết ${oldSchedule.periodStart}-${oldSchedule.periodEnd} sang tiết ${
+            (schedule as any).periodStart
+          }-${(schedule as any).periodEnd}`,
+        );
+      }
+
+      if (oldSchedule.dayOfWeek !== (schedule as any).dayOfWeek) {
+        const oldDay =
+          DAY_NAMES[oldSchedule.dayOfWeek] ?? `Thứ ${oldSchedule.dayOfWeek}`;
+        const newDay =
+          DAY_NAMES[(schedule as any).dayOfWeek] ??
+          `Thứ ${(schedule as any).dayOfWeek}`;
+        changes.push(`chuyển từ ${oldDay} sang ${newDay}`);
+      }
+
+      if (oldSchedule.weekOfYear !== (schedule as any).weekOfYear) {
+        changes.push(
+          `chuyển từ tuần ${oldSchedule.weekOfYear} sang tuần ${
+            (schedule as any).weekOfYear
+          }`,
+        );
+      }
+
+      if (oldSchedule.mode !== (schedule as any).mode) {
+        changes.push(
+          `đổi hình thức từ ${oldSchedule.mode} sang ${(schedule as any).mode}`,
+        );
+      }
+
+      const changeText =
+        changes.length > 0 ? changes.join("; ") : "có cập nhật thông tin";
+
+      const title = `Lịch ${subjectName}${classCode ? ` (${classCode})` : ""} đã thay đổi`;
+      const body = `${changeText.charAt(0).toUpperCase()}${changeText.slice(1)}.`;
+
+      sendNotificationToTopic("role_student", title, body);
+      sendNotificationToTopic("role_teacher", title, body);
+    }
   } catch (err) {
     next(err);
   }
@@ -69,8 +154,34 @@ export async function deleteScheduleHandler(
   next: NextFunction,
 ): Promise<void> {
   try {
+    // Lấy thông tin trước khi xóa để báo đúng nội dung
+    const existing = await prisma.schedule.findUnique({
+      where: { id: req.params.id },
+      include: {
+        teachingUnit: {
+          include: {
+            subject: true,
+            assignment: { include: { classGroup: true } },
+          },
+        },
+      },
+    });
+
     await ScheduleService.deleteSchedule(req.params.id);
     res.status(204).send();
+
+    // ── Thông báo xóa lịch ──
+    if (existing) {
+      const { subjectName, classCode } = getSubjectAndClass(existing);
+      const dayLabel =
+        DAY_NAMES[existing.dayOfWeek] ?? `Thứ ${existing.dayOfWeek}`;
+
+      const title = `Lịch đã bị xóa: ${subjectName}${classCode ? ` (${classCode})` : ""}`;
+      const body = `${dayLabel}, tiết ${existing.periodStart}-${existing.periodEnd}, tuần ${existing.weekOfYear} không còn diễn ra.`;
+
+      sendNotificationToTopic("role_student", title, body);
+      sendNotificationToTopic("role_teacher", title, body);
+    }
   } catch (err) {
     next(err);
   }
@@ -100,7 +211,6 @@ export async function getByTeacherHandler(
       return;
     }
 
-    // FIX: Gọi đúng tên hàm getSchedulesByTeacher
     const schedules = await ScheduleService.getSchedulesByTeacher(
       id,
       academicYear as string,
@@ -136,7 +246,6 @@ export async function getByClassHandler(
       return;
     }
 
-    // FIX: Gọi đúng tên hàm getSchedulesByClass
     const schedules = await ScheduleService.getSchedulesByClass(
       classId,
       academicYear as string,
@@ -172,7 +281,6 @@ export async function getByRoomHandler(
       return;
     }
 
-    // FIX: Gọi đúng tên hàm getSchedulesByRoom với 2 tham số (roomId, weekOfYear)
     const schedules = await ScheduleService.getSchedulesByRoom(
       roomId,
       weekOfYear,
@@ -206,7 +314,6 @@ export async function getByWeekHandler(
       return;
     }
 
-    // FIX: Gọi đúng tên hàm getSchedulesByWeek, đổi thứ tự tham số (academicYear, weekOfYear)
     const schedules = await ScheduleService.getSchedulesByWeek(
       academicYear as string,
       weekOfYear,

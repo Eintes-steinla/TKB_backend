@@ -13,6 +13,119 @@ import {
   emitConflictDetected,
 } from "../socket/events";
 
+// app/controllers/Schedule.controller.ts
+import { Request, Response, NextFunction } from "express";
+import * as ScheduleService from "../services/Schedule.service";
+import { sendNotificationToTopic } from "../services/Fcm.service";
+
+const DAY_NAMES: Record<number, string> = {
+  2: "Thứ 2",
+  3: "Thứ 3",
+  4: "Thứ 4",
+  5: "Thứ 5",
+  6: "Thứ 6",
+  7: "Thứ 7",
+};
+
+export async function updateScheduleHandler(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    if (
+      req.body.roomId === "" ||
+      req.body.roomId === "null" ||
+      req.body.roomId === "undefined"
+    ) {
+      req.body.roomId = null;
+    }
+
+    // Lấy schedule cũ kèm room để so sánh sau khi update
+    const oldSchedule = await prisma.schedule.findUnique({
+      where: { id: req.params.id },
+      include: { room: true },
+    });
+
+    const schedule = await ScheduleService.updateSchedule(
+      req.params.id,
+      req.body,
+    );
+
+    res.status(200).json(schedule);
+
+    // ── Gửi thông báo chi tiết theo đúng thay đổi ──
+    if (oldSchedule) {
+      const subjectName =
+        (schedule as any).teachingUnit?.subject?.name ?? "Môn học";
+      const classCode =
+        (schedule as any).teachingUnit?.assignment?.classGroup?.code ?? "";
+
+      const changes: string[] = [];
+
+      // So sánh phòng học
+      const oldRoomCode = oldSchedule.room?.code ?? null;
+      const newRoomCode = (schedule as any).room?.code ?? null;
+      if (oldSchedule.roomId !== (schedule as any).roomId) {
+        changes.push(
+          `chuyển phòng từ ${oldRoomCode ?? "chưa xếp"} sang ${
+            newRoomCode ?? "chưa xếp"
+          }`,
+        );
+      }
+
+      // So sánh tiết học (giờ)
+      if (
+        oldSchedule.periodStart !== (schedule as any).periodStart ||
+        oldSchedule.periodEnd !== (schedule as any).periodEnd
+      ) {
+        changes.push(
+          `đổi tiết ${oldSchedule.periodStart}-${oldSchedule.periodEnd} sang tiết ${
+            (schedule as any).periodStart
+          }-${(schedule as any).periodEnd}`,
+        );
+      }
+
+      // So sánh thứ trong tuần
+      if (oldSchedule.dayOfWeek !== (schedule as any).dayOfWeek) {
+        const oldDay =
+          DAY_NAMES[oldSchedule.dayOfWeek] ?? `Thứ ${oldSchedule.dayOfWeek}`;
+        const newDay =
+          DAY_NAMES[(schedule as any).dayOfWeek] ??
+          `Thứ ${(schedule as any).dayOfWeek}`;
+        changes.push(`chuyển từ ${oldDay} sang ${newDay}`);
+      }
+
+      // So sánh tuần học
+      if (oldSchedule.weekOfYear !== (schedule as any).weekOfYear) {
+        changes.push(
+          `chuyển từ tuần ${oldSchedule.weekOfYear} sang tuần ${
+            (schedule as any).weekOfYear
+          }`,
+        );
+      }
+
+      // So sánh hình thức (online/offline)
+      if (oldSchedule.mode !== (schedule as any).mode) {
+        changes.push(
+          `đổi hình thức từ ${oldSchedule.mode} sang ${(schedule as any).mode}`,
+        );
+      }
+
+      const changeText =
+        changes.length > 0 ? changes.join("; ") : "có cập nhật thông tin";
+
+      const title = `Lịch ${subjectName}${classCode ? ` (${classCode})` : ""} đã thay đổi`;
+      const body = `${changeText.charAt(0).toUpperCase()}${changeText.slice(1)}.`;
+
+      sendNotificationToTopic("role_student", title, body);
+      sendNotificationToTopic("role_teacher", title, body);
+    }
+  } catch (err) {
+    next(err);
+  }
+}
+
 const scheduleInclude = {
   teachingUnit: {
     include: {
